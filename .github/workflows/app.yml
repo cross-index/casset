@@ -1,34 +1,51 @@
-# Flujo de trabajo CI/CD
+name: CI
 
-name: Governance System CI
-
+# Controls when the workflow will run
 on:
+  # Triggers the workflow on push or pull request events for the "main" branch
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+
+  # Allows manual triggering from the Actions tab
   workflow_dispatch:
 
+# Define jobs that will run in this workflow
 jobs:
-  build:
+  # This job is named "build_and_test"
+  build_and_test:
+    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
     steps:
-      # Paso 1: Clonar el repositorio
-      - uses: actions/checkout@v4
+      # Step 1: Check out the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      # Paso 2: Instalar Node.js
-      - name: Configurar Node.js
-        uses: actions/setup-node@v3
+      # Step 2: Set up Node.js for JavaScript-based projects
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '14'  # Specify the Node.js version
 
-      # Paso 3: Instalar dependencias
-      - name: Instalar dependencias
+      # Step 3: Install dependencies for the project
+      - name: Install dependencies
         run: npm install
 
-      # Paso 4: Ejecutar linters y pruebas del frontend
-      - name: Ejecutar linters y pruebas del frontend
-        run: |
-          npm run lint
-          npm run test
+      # Step 4: Run tests to ensure code quality
+      - name: Run tests
+        run: npm test
+
+      # Step 5: Build the project
+      - name: Build the project
+        run: npm run build
+
+      # Step 6: Lint the codebase for style issues
+      - name: Lint code
+        run: npm run lint
+
+      # Step 7: Deploy (Optional step for continuous deployment)
+      - name: Deploy to production
+        if: github.ref == 'refs/heads/main'
+        run: echo "Deploying to production server..."
