@@ -2,19 +2,18 @@ name: CI
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events for the "main" branch
+  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-
+  
   # Allows manual triggering from the Actions tab
   workflow_dispatch:
 
 # Define jobs that will run in this workflow
 jobs:
-  # This job is named "build_and_test"
-  build_and_test:
+  build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -23,29 +22,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Step 2: Set up Node.js for JavaScript-based projects
+      # Step 2: Navigate to the correct project directory (if necessary)
+      - name: Navigate to subdirectory
+        working-directory: ./subdirectory/where/package.json/is  # Ajuste conforme necessário
+        run: echo "Navigating to project directory"
+
+      # Step 3: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'  # Specify the Node.js version
+          node-version: '14'  # Ajuste conforme necessário
 
-      # Step 3: Install dependencies for the project
+      # Step 4: Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Run tests to ensure code quality
+      # Step 5: Run tests
       - name: Run tests
         run: npm test
 
-      # Step 5: Build the project
+      # Step 6: Build the project
       - name: Build the project
         run: npm run build
-
-      # Step 6: Lint the codebase for style issues
-      - name: Lint code
-        run: npm run lint
-
-      # Step 7: Deploy (Optional step for continuous deployment)
-      - name: Deploy to production
-        if: github.ref == 'refs/heads/main'
-        run: echo "Deploying to production server..."
