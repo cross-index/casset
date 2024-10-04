@@ -26,36 +26,44 @@ jobs:
         with:
           node-version: '14'
 
-      # Paso 3: Instalar dependencias del proyecto (asumiendo un archivo package.json)
+      # Paso 3: Cambiar el directorio a la carpeta frontend (si es necesario)
+      - name: Navegar a la carpeta frontend
+        run: cd frontend  # Cambiar a la carpeta donde está package.json
+
+      # Paso 4: Instalar dependencias del proyecto (package.json)
       - name: Instalar dependencias
         run: npm install
 
-      # Paso 4: Ejecutar linters y pruebas del frontend (JavaScript y CSS)
+      # Paso 5: Ejecutar linters y pruebas del frontend (JavaScript y CSS)
       - name: Ejecutar linters y pruebas del frontend
         run: |
           npm run lint
           npm run test
 
-      # Paso 5: Configurar el entorno de desarrollo para Solidity (Truffle o Hardhat)
-      - name: Instalar Hardhat o Truffle
-        run: |
-          npm install --save-dev hardhat  # O truffle si se utiliza Truffle
+      # Paso 6: Cambiar el directorio a la carpeta de contratos Solidity (si es necesario)
+      - name: Navegar a la carpeta de contratos
+        run: cd ../contracts  # Cambiar a la carpeta donde están los contratos Solidity
 
-      # Paso 6: Compilar los contratos Solidity
+      # Paso 7: Instalar Hardhat
+      - name: Instalar Hardhat
+        run: |
+          npm install --save-dev hardhat
+
+      # Paso 8: Compilar los contratos Solidity
       - name: Compilar contratos Solidity
         run: |
-          npx hardhat compile  # O truffle compile si se usa Truffle
+          npx hardhat compile
 
-      # Paso 7: Ejecutar pruebas de los contratos en Hardhat o Truffle
+      # Paso 9: Ejecutar pruebas de los contratos en Hardhat
       - name: Ejecutar pruebas de contratos
         run: |
-          npx hardhat test  # O truffle test
+          npx hardhat test
 
-      # Paso 8: (Opcional) Desplegar los contratos en una red de prueba (por ejemplo, Rinkeby)
+      # Paso 10: (Opcional) Desplegar los contratos en una red de prueba
       - name: Desplegar contratos en red de prueba
         run: |
-          npx hardhat run scripts/deploy.js --network rinkeby  # Ejemplo de red de prueba
+          npx hardhat run scripts/deploy.js --network rinkeby
 
-      # Paso 9: Notificar éxito al finalizar el proceso
+      # Paso 11: Notificar éxito al finalizar el proceso
       - name: Notificar éxito
         run: echo "¡El sistema de gobernanza ha sido construido y desplegado exitosamente!"
