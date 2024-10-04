@@ -1,0 +1,50 @@
+# Este workflow fará uma instalação limpa das dependências do Node.js, cache/restauração delas, compilação do código fonte e execução de testes em diferentes versões do Node.js
+# Mais informações: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Node.js CI - Altcoin Governance
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+        # Veja o cronograma de versões suportadas do Node.js em https://nodejs.org/en/about/releases/
+
+    steps:
+    # Faz o checkout do código
+    - uses: actions/checkout@v4
+
+    # Define a versão do Node.js utilizando cache para npm
+    - name: Usar Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    # Instala as dependências do projeto usando npm ci para builds consistentes
+    - name: Instalar dependências
+      run: npm ci
+
+    # Compila o código fonte, se houver scripts de build definidos no package.json
+    - name: Compilar código se necessário
+      run: npm run build --if-present
+
+    # Executa os testes do projeto (certifique-se que há um script "test" no package.json)
+    - name: Executar testes
+      run: npm test
+
+    # Executa o servidor express para testar endpoints
+    - name: Testar API do servidor
+      run: |
+        npm start &
+        sleep 10 # Aguardar o servidor subir
+        curl --request GET http://localhost:3000/api/altcoins # Testa a rota de candidatos altcoin
