@@ -16,8 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
-        # Veja o cronograma de versões suportadas do Node.js em https://nodejs.org/en/about/releases/
+        node-version: [18.x, 20.x, 21.x]  # Alterado para evitar a versão 22.x até que seja suportada.
 
     steps:
     # Faz o checkout do código
