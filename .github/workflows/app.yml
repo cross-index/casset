@@ -1,50 +1,61 @@
-# This workflow integrates CI/CD for a blockchain-based governance system
+# Flujo de trabajo CI/CD para un sistema de gobernanza basado en blockchain
+
 name: Governance System CI
 
 on:
-  # Trigger on push or pull request events for the "main" branch
+  # Ejecutar el flujo de trabajo en eventos de push o pull request en la rama "main"
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-  # Allow manual trigger from the Actions tab
+  # Permitir ejecución manual desde la pestaña de Actions
   workflow_dispatch:
 
 jobs:
-  # Job to build and test the governance system
+  # Trabajo para construir y probar el sistema de gobernanza
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the repository
+      # Paso 1: Clonar el repositorio
       - uses: actions/checkout@v4
 
-      # Step 2: Set up Node.js for frontend scripts
-      - name: Set up Node.js
+      # Paso 2: Instalar Node.js para manejar scripts frontend
+      - name: Configurar Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '14'
 
-      # Step 3: Install dependencies (assuming a package.json in the repo)
-      - name: Install dependencies
+      # Paso 3: Instalar dependencias del proyecto (asumiendo un archivo package.json)
+      - name: Instalar dependencias
         run: npm install
 
-      # Step 4: Run linters and tests for the frontend (JavaScript and CSS)
-      - name: Run frontend lint and tests
+      # Paso 4: Ejecutar linters y pruebas del frontend (JavaScript y CSS)
+      - name: Ejecutar linters y pruebas del frontend
         run: |
           npm run lint
           npm run test
 
-      # Step 5: Run Solidity contract compilation (assuming Truffle or Hardhat)
-      - name: Compile Solidity contracts
+      # Paso 5: Configurar el entorno de desarrollo para Solidity (Truffle o Hardhat)
+      - name: Instalar Hardhat o Truffle
         run: |
-          npx hardhat compile  # Or use truffle compile if using Truffle
+          npm install --save-dev hardhat  # O truffle si se utiliza Truffle
 
-      # Step 6: Deploy contracts to testnet (optional, depends on context)
-      - name: Deploy contracts to testnet
+      # Paso 6: Compilar los contratos Solidity
+      - name: Compilar contratos Solidity
         run: |
-          npx hardhat run scripts/deploy.js --network rinkeby  # Example network
+          npx hardhat compile  # O truffle compile si se usa Truffle
 
-      # Step 7: Report success
-      - name: Notify success
-        run: echo "Governance system build and deploy succeeded!"
+      # Paso 7: Ejecutar pruebas de los contratos en Hardhat o Truffle
+      - name: Ejecutar pruebas de contratos
+        run: |
+          npx hardhat test  # O truffle test
+
+      # Paso 8: (Opcional) Desplegar los contratos en una red de prueba (por ejemplo, Rinkeby)
+      - name: Desplegar contratos en red de prueba
+        run: |
+          npx hardhat run scripts/deploy.js --network rinkeby  # Ejemplo de red de prueba
+
+      # Paso 9: Notificar éxito al finalizar el proceso
+      - name: Notificar éxito
+        run: echo "¡El sistema de gobernanza ha sido construido y desplegado exitosamente!"
