@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Altcoin Fund Governance</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Altcoin Fund Governance</h1>
+
+        <section id="register">
+            <h2>Register as an Investor</h2>
+            <input type="text" id="investorAddress" placeholder="Enter your Ethereum address">
+            <button id="registerButton">Register</button>
+            <p id="registerMessage"></p>
+        </section>
+
+        <section id="vote">
+            <h2>Cast Your Vote</h2>
+            <div id="altcoinCandidates"></div>
+            <button id="submitVoteButton">Submit Vote</button>
+            <p id="voteMessage"></p>
+        </section>
+
+        <section id="results">
+            <h2>Election Result</h2>
+            <button id="getResultButton">Get Result</button>
+            <div id="resultDisplay"></div>
+        </section>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
